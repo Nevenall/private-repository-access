@@ -3,11 +3,17 @@
 GET https://git.nevenall.games/foundry-warhammer40k?token=dawF2mUa HTTP/1.1
 
 
-### Local
+### GET Manifest from Local
 GET https://localhost/foundry-warhammer40k/master/system.json?token=dawF2mUa HTTP/1.1
 
 
-### Local
+### GET without token should return 403
+GET https://localhost/foundry-warhammer40k/master/system.json HTTP/1.1
+
+
+
+
+### GET archive from local
 GET https://localhost/foundry-warhammer40k/archive/master.zip?token=dawF2mUa HTTP/1.1
 
 

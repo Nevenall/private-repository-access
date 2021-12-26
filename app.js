@@ -1,8 +1,10 @@
 import restify, { plugins } from 'restify'
 import fs from 'fs'
 import errors from 'restify-errors'
+import clients from 'restify-clients'
+import assert from 'assert'
 
-
+var git = clients.createHttpClient({ url: "https://api.github.com", headers: { 'Authorization': `token ${process.env.ACCESSTOKEN}` } })
 
 var app = restify.createServer({
    certificate: fs.readFileSync(process.env.CERTIFICATE),
@@ -11,14 +13,14 @@ var app = restify.createServer({
 
 app.use(plugins.queryParser({ mapParams: false }))
 
-// add cors headers to each request
+// add cors headers to each response
 app.use((req, res, next) => {
    res.header('Access-Control-Allow-Origin', '*')
    res.header('Access-Control-Allow-Headers', 'X-Requested-With')
    return next()
 })
 
-// add handler to check for a query parameter 'token'
+// check each request for a query parameter 'token'
 app.use((req, res, next) => {
    if (req.query.token !== process.env.TOKEN) {
       return next(new errors.ForbiddenError('token required'))
@@ -27,6 +29,7 @@ app.use((req, res, next) => {
    }
 })
 
+// respond to OPTIONS for CORS pre-flight requests
 app.opts('/:repository/*', (req, res, next) => {
    res.send(204, null, {
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
@@ -35,18 +38,28 @@ app.opts('/:repository/*', (req, res, next) => {
    return next()
 })
 
+// respond to GET
+app.get('/:repository/*', (request, response, next) => {
+   var repo = request.params.repository
+   var path = request.params['*']
 
-app.get('/:repository/*', (req, res, next) => {
+   git.get('/zen', (err, req) => {
+      assert.ifError(err) // connection error
 
-   var repo = req.params.repository
-   var path = req.params['*']
+      req.on('result', (err, res) => {
+         assert.ifError(err) // HTTP status code >= 400
 
-   console.log(`${repo}  ${path}`)
+         response.body = ''
+         res.on('data', (chunk) => {
+            response.body += chunk
+         })
 
-
-   res.send(200, 'working for now')
-
-   return next()
+         res.on('end', () => {
+            response.sendRaw(response.body)
+            return next()
+         })
+      })
+   })
 })
 
 
