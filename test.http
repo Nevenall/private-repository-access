@@ -4,18 +4,27 @@ GET https://git.nevenall.games/foundry-warhammer40k?token=dawF2mUa HTTP/1.1
 
 
 ### GET Manifest from Local
-GET https://localhost/foundry-warhammer40k/master/system.json?token=dawF2mUa HTTP/1.1
+GET https://localhost/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1
 
 
 ### GET without token should return 403
-GET https://localhost/foundry-warhammer40k/master/system.json HTTP/1.1
-
-
+GET https://localhost/foundry-warhammer40k/system.json HTTP/1.1
 
 
 ### GET archive from local
-GET https://localhost/foundry-warhammer40k/archive/master.zip?token=dawF2mUa HTTP/1.1
+GET https://localhost/foundry-warhammer40k/master.zip?token=dawF2mUa HTTP/1.1
 
 
-### Local
-OPTIONS  https://localhost/foundry-warhammer40k/master/system.json?token=dawF2mUa HTTP/1.1
+### github api ​— get manifest
+GET https://api.github.com/repos/Nevenall/foundry-warhammer40k/contents/system.json
+Authorization: token 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
+Accept: application/vnd.github.VERSION.raw
+
+
+### github api ​— get archive
+GET https://api.github.com/repos/Nevenall/foundry-warhammer40k/zipball
+Authorization: token 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
+# Accept: application/vnd.github.v3+json
+
+###
+GET https://codeload.github.com/Nevenall/foundry-warhammer40k/legacy.zip/refs/heads/master?token=ABLWHR5WRUTSOWXGOEHINZ3BZDZC2 HTTP/1.1

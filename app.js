@@ -2,9 +2,16 @@ import restify, { plugins } from 'restify'
 import fs from 'fs'
 import errors from 'restify-errors'
 import clients from 'restify-clients'
-import assert from 'assert'
+import url from 'url'
 
-var git = clients.createHttpClient({ url: "https://api.github.com", headers: { 'Authorization': `token ${process.env.ACCESSTOKEN}` } })
+// note - apparently followRedirects doesn't work for http, or maybe it's the way github does it, but we have to do it manually.
+var git = clients.createHttpClient({
+   url: "https://api.github.com",
+   headers: {
+      Authorization: `token ${process.env.ACCESSTOKEN}`,
+      Accept: 'application/vnd.github.VERSION.raw'
+   }
+})
 
 var app = restify.createServer({
    certificate: fs.readFileSync(process.env.CERTIFICATE),
@@ -30,41 +37,51 @@ app.use((req, res, next) => {
 })
 
 // respond to OPTIONS for CORS pre-flight requests
-app.opts('/:repository/*', (req, res, next) => {
+// I think wildcard will work here
+app.opts('/*', (req, res, next) => {
    res.send(204, null, {
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-PINGOTHER, Content-Type'
+      'Access-Control-Allow-Headers': 'X-PINGOTHER, Content-Type, Accept'
    })
    return next()
 })
 
-// respond to GET
-app.get('/:repository/*', (request, response, next) => {
+// GET manifest json
+app.get('/:repository/:manifest(\\w+).json', (request, response, next) => {
    var repo = request.params.repository
-   var path = request.params['*']
+   var manifest = request.params.manifest
 
-   git.get('/zen', (err, req) => {
-      assert.ifError(err) // connection error
-
+   git.get(`/repos/Nevenall/${repo}/contents/${manifest}.json`, (connectError, req) => {
       req.on('result', (err, res) => {
-         assert.ifError(err) // HTTP status code >= 400
-
-         response.body = ''
-         res.on('data', (chunk) => {
-            response.body += chunk
-         })
-
-         res.on('end', () => {
-            response.sendRaw(response.body)
-            return next()
-         })
+         res.pipe(response)
       })
    })
 })
 
 
+// GET archive zip
+app.get('/:repository/:archive(\\w+).zip', (request, response, next) => {
+   var repo = request.params.repository
 
+   git.get(`/repos/Nevenall/${repo}/zipball`, (connectError, req, res, obj) => {
+      // err is connect error
+      // todo - if connection error?
 
+      req.on('response', (err, res) => {
+         // manually following redirects
+         if (err && err.statusCode === 302) {
+            var location = new URL(err.headers.location)
+            clients.createHttpClient({ url: location.origin }).get(`${location.pathname}${location.search}`, function (err, req) {
+               req.on('result', function (err, res) {
+                  res.pipe(response)
+               })
+            })
+         } else {
+            return next(new Error('expected a redirect'))
+         }
+      })
+   })
+})
 
 
 // start server
