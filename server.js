@@ -13,10 +13,12 @@ var git = clients.createHttpClient({
    }
 })
 
-var app = restify.createServer({
-   certificate: fs.readFileSync(process.env.CERTIFICATE),
-   key: fs.readFileSync(process.env.CERTIFICATEKEY)
-})
+var app = restify.createServer(
+   // {
+   //    certificate: fs.readFileSync(process.env.CERTIFICATE),
+   //    key: fs.readFileSync(process.env.CERTIFICATEKEY)
+   // }
+)
 
 app.use(plugins.queryParser({ mapParams: false }))
 
