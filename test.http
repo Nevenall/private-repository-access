@@ -14,6 +14,8 @@ GET https://localhost/foundry-warhammer40k/system.json HTTP/1.1
 ### GET archive from local
 GET https://localhost/foundry-warhammer40k/master.zip?token=dawF2mUa HTTP/1.1
 
+### online?
+GET http://localhost:3031?token=dawF2mUa
 
 ### github api ​— get manifest
 GET https://api.github.com/repos/Nevenall/foundry-warhammer40k/contents/system.json
@@ -33,3 +35,7 @@ GET https://codeload.github.com/Nevenall/foundry-warhammer40k/legacy.zip/refs/he
 
 ### GET ​— online app
 GET https://private-repository-access-9ylf6.ondigitalocean.app/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1
+
+
+### OPTIONS ​— online app
+OPTIONS https://private-repository-access-9ylf6.ondigitalocean.app/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1

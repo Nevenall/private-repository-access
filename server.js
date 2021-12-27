@@ -3,6 +3,7 @@ import fs from 'fs'
 import errors from 'restify-errors'
 import clients from 'restify-clients'
 import url from 'url'
+import { get } from 'http'
 
 // note - apparently followRedirects doesn't work for http, or maybe it's the way github does it, but we have to do it manually.
 var git = clients.createHttpClient({
@@ -13,13 +14,7 @@ var git = clients.createHttpClient({
    }
 })
 
-
-var app = restify.createServer(
-   // {
-   //    certificate: fs.readFileSync(process.env.CERTIFICATE),
-   //    key: fs.readFileSync(process.env.CERTIFICATEKEY)
-   // }
-)
+var app = restify.createServer()
 
 app.use(plugins.queryParser({ mapParams: false }))
 
@@ -86,10 +81,16 @@ app.get('/:repository/:archive(\\w+).zip', (request, response, next) => {
    })
 })
 
+app.get('/', (request, response, next) => {
+   git.get('/zen', (err, req) => {
+      req.on('result', function (err, res) {
+         res.pipe(response)
+      })
+   })
+})
 
 // start server
-app.listen(443, () => {
-   console.log(JSON.stringify(process.env))
+app.listen(process.env.PORT || 3031, () => {
    console.log('%s listening at %s', app.name, app.url)
 })
 
