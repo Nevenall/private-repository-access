@@ -13,6 +13,7 @@ var git = clients.createHttpClient({
    }
 })
 
+
 var app = restify.createServer(
    // {
    //    certificate: fs.readFileSync(process.env.CERTIFICATE),
@@ -88,6 +89,7 @@ app.get('/:repository/:archive(\\w+).zip', (request, response, next) => {
 
 // start server
 app.listen(443, () => {
+   console.log(JSON.stringify(process.env))
    console.log('%s listening at %s', app.name, app.url)
 })
 
