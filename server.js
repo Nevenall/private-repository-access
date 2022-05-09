@@ -10,7 +10,7 @@ var git = clients.createHttpClient({
    url: "https://api.github.com",
    headers: {
       Authorization: `token ${process.env.ACCESSTOKEN}`,
-      Accept: 'application/vnd.github.VERSION.raw'
+      Accept: 'application/vnd.github.v3.raw'
    }
 })
 

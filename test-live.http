@@ -1,0 +1,29 @@
+
+### get a private repo
+GET https://git.nevenall.games/foundry-warhammer40k?token=dawF2mUa HTTP/1.1
+
+
+### GET Manifest 
+GET https://git.nevenall.games/foundry-compendiums/module.json?token=dawF2mUa HTTP/1.1
+
+
+### GET without token should return 403
+GET https://localhost/foundry-warhammer40k/system.json HTTP/1.1
+
+
+### GET archive from local
+GET https://localhost/foundry-warhammer40k/master.zip?token=dawF2mUa HTTP/1.1
+
+### online?
+GET https://git.nevenall.games?token=dawF2mUa
+
+
+
+
+
+### GET ​— online app
+GET https://private-repository-access-9ylf6.ondigitalocean.app/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1
+
+
+### OPTIONS ​— online app
+OPTIONS https://private-repository-access-9ylf6.ondigitalocean.app/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1

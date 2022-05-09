@@ -1,0 +1,18 @@
+### online?
+GET http://localhost:3031?token=dawF2mUa
+
+
+### GET Manifest from Local
+GET http://localhost:3031/foundry-common-compendiums/module.json?token=dawF2mUa HTTP/1.1
+
+### GET Manifest from Local
+GET https://localhost:3031/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1
+
+
+### GET without token should return 403
+GET http://localhost:3031/foundry-warhammer40k/system.json?token=dawF2mUa HTTP/1.1
+
+
+### GET archive from local
+GET http://localhost:3031/foundry-warhammer40k/master.zip?token=dawF2mUa HTTP/1.1
+
