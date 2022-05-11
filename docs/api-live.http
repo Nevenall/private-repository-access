@@ -4,16 +4,16 @@
 GET https://git.nevenall.games?token={{token}}
 
 
-### GET Manifest 
+### GET common compendiums 
 GET https://git.nevenall.games/foundry-common-compendiums/module.json?token={{token}} HTTP/1.1
 
 
-### GET without token should return 403
-GET https://localhost/foundry-warhammer40k/system.json HTTP/1.1
+### GET warhammer40k
+GET https://git.nevenall.games/foundry-warhammer40k/system.json?token={{token}} HTTP/1.1
 
 
 ### GET archive from local
-GET https://localhost/foundry-warhammer40k/master.zip?token={{token}} HTTP/1.1
+GET https://git.nevenall.games/foundry-warhammer40k/master.zip?token={{token}} HTTP/1.1
 
 ### online?
 GET https://git.nevenall.games?token={{token}}
