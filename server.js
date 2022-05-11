@@ -15,6 +15,8 @@ var git = clients.createHttpClient({
 })
 
 var app = restify.createServer()
+app.name = "private-repository-access"
+let version = '1.0.0'
 
 app.use(plugins.queryParser({ mapParams: false }))
 
@@ -91,6 +93,6 @@ app.get('/', (request, response, next) => {
 
 // start server
 app.listen(process.env.PORT || 3031, () => {
-   console.log('%s listening at %s', app.name, app.url)
+   console.log(`${app.name} v${version} listening at ${app.url}`)
 })
 

@@ -1,0 +1,9 @@
+@token = {{$dotenv ACCESSTOKEN}}
+
+### Get a file
+GET https://api.github.com/repos/Nevenall/foundry-common-compendiums/contents/module.json HTTP/1.1
+Authorization: token {{token}}
+Accept: application/vnd.github.v3.raw
+
+
+
